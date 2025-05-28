@@ -3,7 +3,8 @@ import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
-app = Flask(__name__)
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+app = Flask(__name__, template_folder=template_dir)
 app.secret_key = os.environ.get('SECRET_KEY', 'dreamsecret$$$###@@!!')
 
 def get_db_path():
@@ -107,6 +108,13 @@ def register():
 def logout():
     session.clear()
     return redirect('/login')
+
+@app.route('/test')
+def test():
+    try:
+        return render_template('login.html')
+    except Exception as e:
+        return f"Error: {str(e)}", 500
 
 if __name__ == '__main__':
     init_db()
